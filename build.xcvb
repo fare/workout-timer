@@ -1,0 +1,7 @@
+#+xcvb
+(module
+ (:fullname "workout-timer"
+  :build-depends-on
+  ("/asdf" (:asdf "mixalot") (:asdf "mixalot-vorbis") (:asdf "local-time"))
+  :depends-on ("timer")
+  :supersedes-asdf ("workout-timer")))

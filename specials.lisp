@@ -4,4 +4,4 @@
 
 (defparameter *mixer* nil)
 
-(defparameter *base-time* nil)
+(defparameter *current-time* nil)

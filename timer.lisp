@@ -27,20 +27,25 @@
 
 (defun vsleep (&optional n)
   (let ((current-time (now)))
-    (when (or (null n) (null *base-time*))
-      (setf *base-time* current-time))
+    (when (or (null n)
+              (null *current-time*)
+              (when (timestamp< current-time *current-time*)
+                (format *error-output* "~&Your clock ran backwards. Adjusting.~%")
+                t))
+      (setf *current-time* current-time))
     (when (null n)
       (setf n 0))
-    (let* ((target-time (timestamp+ *base-time* (floor (* n 1000000000)) :nsec))
+    (assert (>= n 0))
+    (let* ((target-time (timestamp+ *current-time* (floor (* n 1000000000)) :nsec))
            (delay (timestamp-difference target-time current-time)))
       (cond
         ((> delay 0)
          (sleep delay)
-         (setf *base-time* target-time))
+         (setf *current-time* target-time))
         (t
          ;; already missed the deadline, skipping.
-         (format t "~&Oops, skipped a beat~%")
-         (setf *base-time* current-time))))))
+         (format *error-output* "~&Oops, skipped a beat~%")
+         (setf *current-time* current-time))))))
 
 (defun countdown (n &key click)
   (loop :with l = (integer-digits n)

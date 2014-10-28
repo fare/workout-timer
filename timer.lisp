@@ -2,25 +2,19 @@
 
 (in-package :workout-timer)
 
-(defun oggfile (x)
-  (namestring (asdf:system-relative-pathname :workout-timer x :type "ogg")))
+(defun pn (x &optional type) (asdf:system-relative-pathname :workout-timer x :type type))
 
-(defun oggstream (x)
-  (make-vorbis-streamer (oggfile x) :output-rate 44100))
+(defun oggfile (x) (namestring (pn x "ogg")))
 
-(defun addogg (x)
-  (mixer-add-streamer *mixer* (oggstream x)))
+(defun oggstream (x) (make-vorbis-streamer (oggfile x) :output-rate 44100))
 
-;; recoded with sox ${in} -r 44100 ${out}.ogg
-(defun bell ()
-  (addogg "bell")) ;; from https://www.freesound.org/people/Taira%20Komori/sounds/212057/
-(defun click ()
-  (addogg "click")) ;; from https://www.freesound.org/people/EdgardEdition/sounds/113634/
-(defun buzzer ()
-  (addogg "buzzer")) ;; from https://www.freesound.org/people/guitarguy1985/sounds/54047/
-(defun gong ()
-  (addogg "gong")) ;; from https://www.freesound.org/people/Veiler/sounds/207168/
+(defun addogg (x) (mixer-add-streamer *mixer* (oggstream x)))
 
+;; Samples from the respective URLs, as recoded with sox ${in} -r 44100 ${out}.ogg
+(defun bell () (addogg "bell")) ;; https://www.freesound.org/people/Taira%20Komori/sounds/212057/
+(defun click () (addogg "click")) ;; https://www.freesound.org/people/EdgardEdition/sounds/113634/
+(defun buzzer () (addogg "buzzer")) ;; https://www.freesound.org/people/guitarguy1985/sounds/54047/
+(defun gong () (addogg "gong")) ;; https://www.freesound.org/people/Veiler/sounds/207168/
 
 (defun integer-digits (n &optional (base 10))
   "Given a non-negative integer N, return how many digits it takes to write n in given BASE"
@@ -51,7 +45,7 @@
 (defun countdown (n &key click)
   (loop :with l = (integer-digits n)
         :for i :from n :downto 0 :do
-    (format! t "  ~v,' D~C" l i #\return)
+    (format! t "  ~v,' D  ~C" l i #\return)
     (unless (zerop i)
       (when click (click))
       (vsleep 1))))
@@ -69,14 +63,14 @@
                         "High knees running in place" "Lunge" "Push-up and rotation" "Side plank")))
   (vsleep 0)
   (loop :for (exercise . morep) :on exercises :do
-    (format! t "~&~As!~%" exercise)
+    (format! t "~As!~%" exercise)
     (bell)
     (countdown work-seconds :click t)
     (cond
       (morep (buzzer)
-             (format! t "~&Rest! (next: ~As)~%" (car morep))
+             (format! t "Rest. (Next: ~As.)~%" (car morep))
              (countdown pause-seconds :click nil))
-      (t (gong) (format! t "~&Done!") (return)))))
+      (t (gong) (format! t "Done!~%") (return)))))
 
 (defun mix-it ()
   (setf *mixer* (create-mixer :rate 44100))
@@ -84,6 +78,11 @@
   (destroy-mixer *mixer*)
   (setf *mixer* nil)
   (values))
+
+(defun show-picture ()
+  ;; Save as pic.jpg the picture from
+  ;; http://graphics8.nytimes.com/images/2013/05/12/health/12well_physed/12well_physed-tmagArticle.jpg
+  (run-program (format nil "qiv --center ~A &" (native-namestring (pn "pic.jpg")))))
 
 (defun start ()
   (main-thread-init)

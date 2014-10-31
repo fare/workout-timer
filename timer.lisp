@@ -70,13 +70,12 @@
       (morep (buzzer)
              (format! t "Rest. (Next: ~As.)~%" (car morep))
              (countdown pause-seconds :click nil))
-      (t (gong) (format! t "Done!~%") (return)))))
+      (t (gong) (format! t "Done!~%") (sleep 5) (return)))))
 
 (defun mix-it ()
-  (setf *mixer* (create-mixer :rate 44100))
-  (my-workout)
-  (destroy-mixer *mixer*)
-  (setf *mixer* nil)
+  (let ((*mixer* (create-mixer :rate 44100)))
+    (my-workout)
+    (destroy-mixer *mixer*))
   (values))
 
 (defun show-picture ()

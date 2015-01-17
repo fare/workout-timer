@@ -2,14 +2,13 @@
 ;;; workout-timer, trivial work out timer in CL
 ;;;
 ;;; Free Software available under an MIT-style license.
-;;; Copyright (c) 2012 - 2012, Francois-Rene Rideau
+;;; Copyright (c) 2012 - 2015, Francois-Rene Rideau
 
 #| Use it as follows:
 
-sbcl --load ~/quicklisp/setup \
-  --eval '(ql:quickload "workout-timer")' \
-  --eval '(workout-timer::start)'
-  --eval '(sb-ext:quit :recklessly-p t :unix-status 0)'
+Using cl-launch:
+
+  ./workout-timer
 
 Or, from the SBCL (SLIME) REPL:
 
@@ -17,13 +16,22 @@ Or, from the SBCL (SLIME) REPL:
   (ql:quickload "workout-timer")
   (workout-timer::start)
 
+Or, from the shell, without cl-launch:
+
+  sbcl --noinform --load ~/quicklisp/setup \
+    --eval '(ql:quickload "workout-timer" :verbose nil)' \
+    --eval "(uiop:restore-image :entry-point 'workout-timer::start)"
 |#
 
-(defsystem :workout-timer
+(defsystem "workout-timer"
   :licence "MIT"
-  :description "Bundle operations for ASDF"
-  :long-description "Can bundle one or many asdf systems into one .fasl and/or one .so"
-  :depends-on (:asdf :mixalot :mixalot-vorbis :local-time)
+  :description "Workout timer"
+  :long-description "Workout timer with clock ticks and gongs
+programmed for a 7-minute workout but you can modify it to suit your own workout"
+  :author "Francois-Rene Rideau"
+  :homepage "http://cliki.net/workout-timer"
+  :source-control (:git "git://common-lisp.net/users/frideau/workout-timer.git")
+  :depends-on ("asdf" "uiop" "mixalot" "mixalot-vorbis" "local-time")
   :components
   ((:file "package")
    (:file "specials" :depends-on ("package"))

@@ -86,3 +86,7 @@
 (defun start ()
   (main-thread-init)
   (mix-it))
+
+(defun main (argv)
+  (declare (ignore argv))
+  (start))

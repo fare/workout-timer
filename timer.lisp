@@ -50,6 +50,13 @@
       (when click (click))
       (vsleep 1))))
 
+(defun integer-length* (integer &optional (base 10))
+  (cond ((= base 2)
+         (integer-length integer))
+        ((= base (ash 1 (1- (integer-length base))))
+         (values (ceiling (integer-length integer) (1- (integer-length base)))))
+        (t (values (ceiling (log (1+ integer) base))))))
+
 ;; See exercises here:
 ;; http://well.blogs.nytimes.com/2013/05/09/the-scientific-7-minute-workout/
 ;; http://graphics8.nytimes.com/images/2013/05/12/health/12well_physed/12well_physed-tmagArticle.jpg
@@ -62,8 +69,12 @@
                         "Step-up onto chair" "Squat" "Triceps dip on chair" "Plank"
                         "High knees running in place" "Lunge" "Push-up and rotation" "Side plank")))
   (vsleep 0)
-  (loop :for (exercise . morep) :on exercises :do
-    (format! t "~As!~%" exercise)
+  (loop
+    :with total = (length exercises)
+    :with il = (integer-length* total 10)
+    :for (exercise . morep) :on exercises
+    :for count :from 1 :do
+    (format! t "[~v,'0D/~D] ~As!~%" il count total exercise)
     (bell)
     (countdown work-seconds :click t)
     (cond
@@ -89,4 +100,5 @@
 
 (defun main (argv)
   (declare (ignore argv))
+  ;; TODO: parse arguments with CLON or command-line-arguments...
   (start))

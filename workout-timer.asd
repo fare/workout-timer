@@ -24,14 +24,15 @@ Or, from the shell, without cl-launch:
 |#
 
 (defsystem "workout-timer"
-  :licence "MIT"
+  :version "1.0.0"
   :description "Workout timer"
   :long-description "Workout timer with clock ticks and gongs
 programmed for a 7-minute workout but you can modify it to suit your own workout"
   :author "Francois-Rene Rideau"
+  :licence "MIT"
   :homepage "http://cliki.net/workout-timer"
   :source-control (:git "git://common-lisp.net/users/frideau/workout-timer.git")
-  :depends-on ("asdf" "uiop" "mixalot" "mixalot-vorbis" "local-time")
+  :depends-on ((:version "asdf" "3.0") "mixalot" "mixalot-vorbis" "local-time")
   :components
   ((:file "package")
    (:file "specials" :depends-on ("package"))

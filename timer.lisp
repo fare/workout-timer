@@ -2,6 +2,27 @@
 
 (in-package :workout-timer)
 
+(defparameter *version* "1.0.1")
+
+(defparameter +workout-timer-option-spec+
+  '((("work-seconds" #\w) :type integer :optional t :documentation "duration of each exercise, in seconds")
+    (("pause-seconds" #\p) :type integer :optional t :documentation "duration of pause between exercises, in seconds")
+    (("exercises" #\e) :type string :list t :optional t :documentation "name of the exercises")
+    (("help" #\h) :type boolean :optional t :documentation "display help")
+    (("version" #\V) :type boolean :optional t :documentation "display version")))
+
+(defun main (args)
+  (handle-command-line +workout-timer-option-spec+ 'workout-timer
+                       :command-line args :name "workout-timer" :rest-arity nil))
+
+(defun show-version ()
+  (format t "workout-timer ~a~%" *version*))
+
+(defun show-help ()
+  (show-version)
+  (show-option-help +workout-timer-option-spec+ :sort-names t))
+
+
 (defun pn (x &optional type) (asdf:system-relative-pathname :workout-timer x :type type))
 
 (defun oggfile (x) (namestring (pn x "ogg")))
@@ -61,15 +82,15 @@
 ;; http://well.blogs.nytimes.com/2013/05/09/the-scientific-7-minute-workout/
 ;; http://graphics8.nytimes.com/images/2013/05/12/health/12well_physed/12well_physed-tmagArticle.jpg
 ;; https://www.youtube.com/watch?v=ECxYJcnvyMw
-(defun my-workout (&key
-                     (work-seconds 30)
-                     (pause-seconds 10)
-                     (exercises
-                      '("Jumping jack" "Wall sit" "Push-up" "Abdominal crunch"
-                        "Step-up onto chair" "Squat" "Triceps dip on chair" "Plank"
-                        "High knees running in place" "Lunge" "Push-up and rotation" "Side plank")))
+(defun my-workout (&key work-seconds pause-seconds exercises)
   (vsleep 0)
   (loop
+    :with work-seconds = (or work-seconds 30)
+    :with pause-seconds = (or pause-seconds 10)
+    :with exercises = (or exercises
+                          '("Jumping jack" "Wall sit" "Push-up" "Abdominal crunch"
+                            "Step-up onto chair" "Squat" "Triceps dip on chair" "Plank"
+                            "High knees running in place" "Lunge" "Push-up and rotation" "Side plank"))
     :with total = (length exercises)
     :with il = (integer-length* total 10)
     :for (exercise . morep) :on exercises
@@ -83,9 +104,10 @@
              (countdown pause-seconds :click nil))
       (t (gong) (format! t "Done!~%") (sleep 5) (return)))))
 
-(defun mix-it ()
+(defun mix-it (&key work-seconds pause-seconds exercises)
+  (main-thread-init) ;; mixalot is well-designed enough not to do it twice
   (let ((*mixer* (create-mixer :rate 44100)))
-    (my-workout)
+    (my-workout :work-seconds work-seconds :pause-seconds pause-seconds :exercises exercises)
     (destroy-mixer *mixer*))
   (values))
 
@@ -94,11 +116,8 @@
   ;; http://graphics8.nytimes.com/images/2013/05/12/health/12well_physed/12well_physed-tmagArticle.jpg
   (run-program (format nil "qiv --center ~A &" (native-namestring (pn "pic.jpg")))))
 
-(defun start ()
-  (main-thread-init)
-  (mix-it))
-
-(defun main (argv)
-  (declare (ignore argv))
-  ;; TODO: parse arguments with CLON or command-line-arguments...
-  (start))
+(defun workout-timer (&key work-seconds pause-seconds exercises help version)
+  (cond
+    (version (show-version))
+    (help (show-help))
+    (t (mix-it :work-seconds work-seconds :pause-seconds pause-seconds :exercises exercises))))

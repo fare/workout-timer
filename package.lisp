@@ -1,4 +1,4 @@
 #+xcvb (module ())
 
 (defpackage :workout-timer
-  (:use :cl :uiop :mixalot :mixalot-vorbis :local-time))
+  (:use :cl :uiop :mixalot :mixalot-vorbis :local-time :command-line-arguments))

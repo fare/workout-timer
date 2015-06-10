@@ -1,1 +1,15 @@
-#!/usr/bin/cl -Q -sp workout-timer -r start
+#!/usr/bin/cl -Q -sm workout-timer
+#|
+Version with:
+  ./workout-timer -V
+
+Usage with:
+  ./workout-timer -h
+
+Implicit default:
+  ./workout-timer -w 30 -p 10 \
+  -e "Jumping jack" -e "Wall sit" -e "Push-up" -e "Abdominal crunch" \
+  -e "Step-up onto chair" -e "Squat" -e "Triceps dip on chair" -e "Plank" \
+  -e "High knees running in place" -e "Lunge" -e "Push-up and rotation" -e "Side plank"
+
+|#

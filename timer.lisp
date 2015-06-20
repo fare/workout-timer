@@ -7,7 +7,7 @@
 (defparameter +workout-timer-option-spec+
   '((("work-seconds" #\w) :type integer :optional t :documentation "duration of each exercise, in seconds")
     (("pause-seconds" #\p) :type integer :optional t :documentation "duration of pause between exercises, in seconds")
-    (("exercises" #\e) :type string :list t :optional t :documentation "name of the exercises")
+    (("exercise" #\e) :action :exercises :type string :list t :optional t :documentation "name of an exercise (repeat option as needed)")
     (("help" #\h) :type boolean :optional t :documentation "display help")
     (("version" #\V) :type boolean :optional t :documentation "display version")))
 

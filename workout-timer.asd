@@ -2,7 +2,7 @@
 ;;; workout-timer, trivial work out timer in CL
 ;;;
 ;;; Free Software available under an MIT-style license.
-;;; Copyright (c) 2012 - 2015, Francois-Rene Rideau
+;;; Copyright (c) 2012 - 2016, Francois-Rene Rideau
 
 #| Use it as follows:
 
@@ -24,7 +24,7 @@ Or, from the shell, without cl-launch:
 |#
 
 (defsystem "workout-timer"
-  :version (:read-file-form "timer.lisp" :at (1 2))
+  :version (:read-file-form "timer.lisp" :at (2 2))
   :description "Workout timer"
   :long-description "Workout timer with clock ticks and gongs
 programmed for a 7-minute workout but you can modify it to suit your own workout"
@@ -32,8 +32,7 @@ programmed for a 7-minute workout but you can modify it to suit your own workout
   :licence "MIT"
   :homepage "http://cliki.net/workout-timer"
   :source-control (:git "git://common-lisp.net/users/frideau/workout-timer.git")
-  :depends-on ((:version "asdf" "3.0") "mixalot" "mixalot-vorbis" "local-time" "command-line-arguments")
-  :components
-  ((:file "package")
-   (:file "specials" :depends-on ("package"))
-   (:file "timer" :depends-on ("specials"))))
+  :class package-inferred-system
+  :depends-on ((:version "asdf" "3.1") "workout-timer/timer"))
+
+(register-system-packages "vorbisfile-ffi" '(:vorbisfile))

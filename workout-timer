@@ -7,7 +7,7 @@ Usage with:
   ./workout-timer -h
 
 Implicit default:
-  ./workout-timer -w 30 -p 10 \
+  ./workout-timer -v 1.0 -w 30 -p 10 \
   -e "Jumping jack" -e "Wall sit" -e "Push-up" -e "Abdominal crunch" \
   -e "Step-up onto chair" -e "Squat" -e "Triceps dip on chair" -e "Plank" \
   -e "High knees running in place" -e "Lunge" -e "Push-up and rotation" -e "Side plank"

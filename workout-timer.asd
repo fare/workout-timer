@@ -12,15 +12,15 @@ Using cl-launch:
 
 Or, from the SBCL (SLIME) REPL:
 
-  (load "~/quicklisp/setup")
+  (load "~/quicklisp/setup.lisp")
   (ql:quickload "workout-timer")
-  (workout-timer::start)
+  (workout-timer:mix-it :volume 1.0 :work-seconds 30 :pause-seconds 10)
 
 Or, from the shell, without cl-launch:
 
   sbcl --noinform --load ~/quicklisp/setup \
     --eval '(ql:quickload "workout-timer" :verbose nil)' \
-    --eval "(uiop:restore-image :entry-point 'workout-timer::start)"
+    --eval "(uiop:restore-image :entry-point (lambda () (workout-timer:main uiop:*command-line-arguments*)))"
 |#
 
 (defsystem "workout-timer"
@@ -31,7 +31,7 @@ programmed for a 7-minute workout but you can modify it to suit your own workout
   :author "Francois-Rene Rideau"
   :licence "MIT"
   :homepage "http://cliki.net/workout-timer"
-  :source-control (:git "git://common-lisp.net/users/frideau/workout-timer.git")
+  :source-control (:git "https://gitlab.common-lisp.net/frideau/workout-timer.git")
   :class package-inferred-system
   :depends-on ((:version "asdf" "3.1") "workout-timer/timer"))
 

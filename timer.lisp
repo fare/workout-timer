@@ -2,11 +2,12 @@
   (:nicknames :workout-timer)
   (:use :common-lisp :uiop
 	:mixalot :mixalot-vorbis :vorbisfile
-	:local-time :command-line-arguments))
+	:local-time :command-line-arguments)
+  (:export #:main #:mix-it #:start-mixer #:end-mixer))
 
 (in-package :workout-timer/timer)
 
-(defparameter *version* "1.0.2")
+(defparameter *version* "1.0.3")
 
 (defparameter *mixer* nil)
 
@@ -30,7 +31,6 @@
 (defun show-help ()
   (show-version)
   (show-option-help +workout-timer-option-spec+ :sort-names t))
-
 
 (defun pn (x &optional type) (asdf:system-relative-pathname :workout-timer x :type type))
 
@@ -147,6 +147,7 @@
 
 (defun start-mixer ()
   (unless *mixer*
+    (main-thread-init) ;; NB: mixalot is well-designed enough not to do it twice
     (setf *mixer* (create-mixer :rate 44100)))
   *mixer*)
 
@@ -157,7 +158,6 @@
   (values))
 
 (defun mix-it (&key work-seconds pause-seconds exercises volume)
-  (main-thread-init) ;; mixalot is well-designed enough not to do it twice
   (start-mixer)
   (get-samples volume)
   (my-workout

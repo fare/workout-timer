@@ -18,9 +18,9 @@ Or, from the SBCL (SLIME) REPL:
 
 Or, from the shell, without cl-launch:
 
-  sbcl --noinform --load ~/quicklisp/setup \
+  sbcl --noinform --load ~/quicklisp/setup.lisp \
     --eval '(ql:quickload "workout-timer" :verbose nil)' \
-    --eval "(uiop:restore-image :entry-point (lambda () (workout-timer:main uiop:*command-line-arguments*)))"
+    --eval "(uiop:restore-image :entry-point 'workout-timer:entry-point)"
 |#
 
 (defsystem "workout-timer"

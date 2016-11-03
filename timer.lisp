@@ -3,11 +3,11 @@
   (:use :common-lisp :uiop
 	:mixalot :mixalot-vorbis :vorbisfile
 	:local-time :command-line-arguments)
-  (:export #:main #:mix-it #:start-mixer #:end-mixer))
+  (:export #:main #:entry-point #:mix-it #:start-mixer #:end-mixer))
 
 (in-package :workout-timer/timer)
 
-(defparameter *version* "1.0.3")
+(defparameter *version* "1.0.4")
 
 (defparameter *mixer* nil)
 
@@ -24,6 +24,9 @@
 (defun main (args)
   (handle-command-line +workout-timer-option-spec+ 'workout-timer
                        :command-line args :name "workout-timer" :rest-arity nil))
+
+(defun entry-point ()
+  (main *command-line-arguments*))
 
 (defun show-version ()
   (format t "workout-timer ~a~%" *version*))

@@ -36,3 +36,11 @@ programmed for a 7-minute workout but you can modify it to suit your own workout
   :depends-on ((:version "asdf" "3.1") "workout-timer/timer"))
 
 (register-system-packages "vorbisfile-ffi" '(:vorbisfile))
+
+(defsystem "workout-timer/static"
+  :class program-system
+  :defsystem-depends-on ("cffi-toolchain")
+  :depends-on ("workout-timer")
+  :build-operation :static-program-op
+  :build-pathname "workout-timer.static"
+  :entry-point "workout-timer:entry-point")

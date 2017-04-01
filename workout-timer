@@ -1,4 +1,5 @@
-#!/usr/bin/cl -Q -sm workout-timer
+#!/bin/sh
+":" ; exec cl -Q -sm workout-timer "$0" ${1:-"$@"}
 #|
 Version with:
   ./workout-timer -V

@@ -7,7 +7,7 @@
 
 (in-package :workout-timer/timer)
 
-(defparameter *version* "1.0.4")
+(defparameter *version* "1.0.5")
 
 (defparameter *mixer* nil)
 
@@ -126,7 +126,7 @@
 ;; http://well.blogs.nytimes.com/2013/05/09/the-scientific-7-minute-workout/
 ;; http://graphics8.nytimes.com/images/2013/05/12/health/12well_physed/12well_physed-tmagArticle.jpg
 ;; https://www.youtube.com/watch?v=ECxYJcnvyMw
-(defun my-workout (&key work-seconds pause-seconds exercises)
+(defun my-workout (&key work-seconds pause-seconds exercises silentp)
   (vsleep 0)
   (loop
     :with work-seconds = (or work-seconds 30)
@@ -140,13 +140,16 @@
     :for (exercise . morep) :on exercises
     :for count :from 1 :do
     (format! t "[~v,'0D/~D] ~As!~%" il count total exercise)
-    (bell)
-    (countdown work-seconds :click t)
+    (unless silentp (bell))
+    (countdown work-seconds :click (not silentp))
     (cond
-      (morep (buzzer)
+      (morep (unless silentp (buzzer))
              (format! t "Rest. (Next: ~As.)~%" (car morep))
              (countdown pause-seconds :click nil))
-      (t (gong) (format! t "Done!~%") (sleep 5) (return)))))
+      (t (unless silentp (gong))
+         (format! t "Done!~%")
+         (unless silentp (sleep 5))
+         (return)))))
 
 (defun start-mixer ()
   (unless *mixer*
@@ -161,13 +164,19 @@
   (values))
 
 (defun mix-it (&key work-seconds pause-seconds exercises volume)
-  (start-mixer)
-  (get-samples volume)
-  (my-workout
-   :work-seconds work-seconds
-   :pause-seconds pause-seconds
-   :exercises exercises)
-  (end-mixer))
+  (let ((silentp (equalp volume 0)))
+    (unwind-protect
+         (progn
+           (unless silentp
+             (start-mixer)
+             (get-samples volume))
+           (my-workout
+            :work-seconds work-seconds
+            :pause-seconds pause-seconds
+            :exercises exercises
+            :silentp silentp))
+      (unless silentp
+        (end-mixer)))))
 
 (defun show-picture ()
   ;; Save as pic.jpg the picture from

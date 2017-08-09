@@ -1,4 +1,3 @@
-#!/bin/sh
-":" ; exec cl -Q -sp asdf "$0" ${1:-"$@"}
+#!/usr/bin/cl -Q -sp asdf
 
 (make "workout-timer/static")

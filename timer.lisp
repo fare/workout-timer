@@ -1,13 +1,13 @@
 (uiop:define-package :workout-timer/timer
   (:nicknames :workout-timer)
-  (:use :common-lisp :uiop
-	:mixalot :mixalot-vorbis :vorbisfile
-	:local-time :command-line-arguments)
+  (:mix :common-lisp :local-time :uiop ;; use TIMESTAMP< from LOCAL-TIME, not UIOP
+        :mixalot :mixalot-vorbis :vorbisfile
+        :command-line-arguments)
   (:export #:main #:entry-point #:mix-it #:start-mixer #:end-mixer))
 
 (in-package :workout-timer/timer)
 
-(defparameter *version* "1.0.5")
+(defparameter *version* "1.0.6")
 
 (defparameter *mixer* nil)
 

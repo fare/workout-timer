@@ -40,7 +40,7 @@ programmed for a 7-minute workout but you can modify it to suit your own workout
 (defsystem "workout-timer/static"
   :class program-system
   :defsystem-depends-on ("cffi-toolchain")
-  :depends-on ("workout-timer")
+  :depends-on ("workout-timer" "workout-timer/finalizer")
   :build-operation :static-program-op
   :build-pathname "workout-timer.static"
   :entry-point "workout-timer:entry-point")
